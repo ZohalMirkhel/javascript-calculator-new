@@ -1,7 +1,10 @@
+// src/App.js
 import React from 'react';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { Provider, useSelector, useDispatch } from 'react-redux';
+import './index.css';
 
+// Redux Slice
 const initialState = {
   displayValue: '0',
   currentOperand: null,
@@ -64,12 +67,14 @@ const calculatorSlice = createSlice({
 
 const { inputDigit, inputOperator, calculateResult, clear } = calculatorSlice.actions;
 
+// Redux Store
 const store = configureStore({
   reducer: {
     calculator: calculatorSlice.reducer,
   },
 });
 
+// Calculator Component
 function Calculator() {
   const displayValue = useSelector((state) => state.calculator.displayValue);
   const dispatch = useDispatch();
@@ -80,26 +85,26 @@ function Calculator() {
   const handleClear = () => dispatch(clear());
 
   return (
-    <div>
-      <div>{displayValue}</div>
-      <div>
-        <button onClick={handleClear}>AC</button>
-        <button onClick={() => handleOperator('/')}>/</button>
-        <button onClick={() => handleOperator('*')}>*</button>
-        <button onClick={() => handleDigit('7')}>7</button>
-        <button onClick={() => handleDigit('8')}>8</button>
-        <button onClick={() => handleDigit('9')}>9</button>
-        <button onClick={() => handleOperator('-')}>-</button>
-        <button onClick={() => handleDigit('4')}>4</button>
-        <button onClick={() => handleDigit('5')}>5</button>
-        <button onClick={() => handleDigit('6')}>6</button>
-        <button onClick={() => handleOperator('+')}>+</button>
-        <button onClick={() => handleDigit('1')}>1</button>
-        <button onClick={() => handleDigit('2')}>2</button>
-        <button onClick={() => handleDigit('3')}>3</button>
-        <button onClick={handleEquals}>=</button>
-        <button onClick={() => handleDigit('0')}>0</button>
-        <button onClick={() => handleDigit('.')}>.</button>
+    <div className="w-80 max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="p-4 bg-gray-800 text-white text-right text-4xl font-mono">{displayValue}</div>
+      <div className="grid grid-cols-4 gap-1 p-2">
+        <button onClick={handleClear} className="col-span-2 bg-red-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-red-600">AC</button>
+        <button onClick={() => handleOperator('/')} className="bg-orange-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-orange-600">/</button>
+        <button onClick={() => handleOperator('*')} className="bg-orange-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-orange-600">*</button>
+        <button onClick={() => handleOperator('-')} className="bg-orange-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-orange-600">-</button>
+        <button onClick={() => handleDigit('7')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">7</button>
+        <button onClick={() => handleDigit('8')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">8</button>
+        <button onClick={() => handleDigit('9')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">9</button>
+        <button onClick={() => handleOperator('+')} className="bg-orange-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-orange-600">+</button>
+        <button onClick={() => handleDigit('4')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">4</button>
+        <button onClick={() => handleDigit('5')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">5</button>
+        <button onClick={() => handleDigit('6')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">6</button>
+        <button onClick={handleEquals} className="col-span-2 bg-green-500 text-white text-2xl font-bold py-4 rounded-lg hover:bg-green-600">=</button>
+        <button onClick={() => handleDigit('1')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">1</button>
+        <button onClick={() => handleDigit('2')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">2</button>
+        <button onClick={() => handleDigit('3')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">3</button>
+        <button onClick={() => handleDigit('.')} className="bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">.</button>
+        <button onClick={() => handleDigit('0')} className="col-span-2 bg-gray-200 text-gray-800 text-2xl font-bold py-4 rounded-lg hover:bg-gray-300">0</button>
       </div>
     </div>
   );
@@ -108,7 +113,9 @@ function Calculator() {
 function App() {
   return (
     <Provider store={store}>
-      <Calculator />
+      <div className="flex justify-center items-center h-screen bg-gray-200">
+        <Calculator />
+      </div>
     </Provider>
   );
 }
