@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { inputDigit, inputOperator, calculateResult, clear } from '../redux/calculatorSlice';
 
 function Calculator() {
-  const displayValue = useSelector((state) => state.calculator.displayValue);
   const dispatch = useDispatch();
+  const displayValue = useSelector((state) => state.calculator.displayValue);
+  const expression = useSelector((state) => state.calculator.expression);
 
   const handleDigit = (digit) => dispatch(inputDigit(digit));
   const handleOperator = (operator) => dispatch(inputOperator(operator));
@@ -15,6 +16,9 @@ function Calculator() {
     <div className="w-80 max-w-sm mx-auto bg-gray-800 shadow-lg rounded-lg overflow-hidden">
       <div id="display" className="p-4 bg-gray-900 text-white text-right text-4xl font-mono">
         {displayValue}
+      </div>
+      <div id="expression" className="p-4 bg-gray-700 text-white text-right text-xl font-mono">
+        {expression}
       </div>
       <div className="grid grid-cols-4 gap-1">
         <button id="clear" onClick={handleClear} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800 shadow-md">AC</button>

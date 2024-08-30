@@ -2,8 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   displayValue: '0',
-  currentOperand: null,
-  operation: null,
+  expression: '',
+  previousValue: null,
+  operator: null,
   waitingForOperand: false,
 };
 
@@ -12,77 +13,79 @@ const calculatorSlice = createSlice({
   initialState,
   reducers: {
     inputDigit: (state, action) => {
-      if (state.displayValue.includes('.') && action.payload === '.') return;
+      const digit = action.payload;
+
+      if (digit === '.' && state.displayValue.includes('.')) return;
 
       if (state.waitingForOperand) {
-        state.displayValue = action.payload;
+        state.displayValue = digit === '.' ? '0.' : digit;
         state.waitingForOperand = false;
       } else {
-        state.displayValue =
-          state.displayValue === '0' ? action.payload : state.displayValue + action.payload;
+        state.displayValue = state.displayValue === '0' && digit !== '.'
+          ? digit
+          : state.displayValue + digit;
       }
+
+      state.expression += digit;
     },
+
     inputOperator: (state, action) => {
-      const operator = action.payload;
+      const inputOperator = action.payload;
 
-      if (state.displayValue === '' && operator === '-') {
-        state.displayValue = operator;
-        state.waitingForOperand = false;
-        return;
-      }
-
-      if (state.waitingForOperand) {
-        if (operator !== '-' && state.operation !== null) {
-          state.operation = operator;
-          return;
-        }
-      }
-
-      const currentValue = parseFloat(state.displayValue);
-
-      if (state.currentOperand !== null && state.operation) {
-        state.currentOperand = performOperation(state.currentOperand, currentValue, state.operation);
+      if (state.operator && !state.waitingForOperand) {
+        const result = performCalculation(state);
+        state.displayValue = String(result);
+        state.previousValue = result;
+        state.expression = `${result} ${inputOperator}`;
       } else {
-        state.currentOperand = currentValue;
+        if (state.expression.endsWith(' ')) {
+          state.expression = state.expression.slice(0, -1);
+        }
+        state.expression += ` ${inputOperator} `;
+        state.previousValue = state.displayValue;
+        state.operator = inputOperator;
+        state.waitingForOperand = true;
       }
-
-      state.operation = operator;
-      state.displayValue = '';
-      state.waitingForOperand = true;
     },
+
     calculateResult: (state) => {
-      const currentValue = parseFloat(state.displayValue);
-
-      if (state.currentOperand === null || state.operation === null) return;
-
-      const result = performOperation(state.currentOperand, currentValue, state.operation);
-
+      const result = performCalculation(state);
       state.displayValue = String(result);
-      state.currentOperand = result;
-      state.operation = null;
+      state.previousValue = null;
+      state.operator = null;
+      state.waitingForOperand = false;
+      state.expression = `${state.expression} = ${result}`;
+    },
+
+    clear: (state) => {
+      state.displayValue = '0';
+      state.expression = '';
+      state.previousValue = null;
+      state.operator = null;
       state.waitingForOperand = false;
     },
-    clear: (state) => {
-      return initialState;
-    },
-  },
+  }
 });
 
-const performOperation = (a, b, op) => {
-  switch (op) {
+const performCalculation = (state) => {
+  const prev = parseFloat(state.previousValue);
+  const current = parseFloat(state.displayValue);
+
+  if (isNaN(prev) || isNaN(current)) return state.displayValue;
+
+  switch (state.operator) {
     case '+':
-      return a + b;
+      return prev + current;
     case '-':
-      return a - b;
+      return prev - current;
     case '*':
-      return a * b;
+      return prev * current;
     case '/':
-      return a / b;
+      return current !== 0 ? prev / current : 'Error';
     default:
-      return b;
+      return current;
   }
 };
 
 export const { inputDigit, inputOperator, calculateResult, clear } = calculatorSlice.actions;
-
 export default calculatorSlice.reducer;
