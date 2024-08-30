@@ -26,26 +26,41 @@ const calculatorSlice = createSlice({
           : state.displayValue + digit;
       }
 
-      state.expression += digit;
+      // Update the expression
+      if (state.operator) {
+        state.expression = `${state.previousValue} ${state.operator} ${state.displayValue}`;
+      } else {
+        state.expression = state.displayValue;
+      }
     },
 
     inputOperator: (state, action) => {
       const inputOperator = action.payload;
 
+      // Handle the case where the operator is '-' and waiting for operand
+      if (inputOperator === '-' && state.waitingForOperand) {
+        state.displayValue = inputOperator; // Display the negative sign
+        state.waitingForOperand = false;
+        state.expression += ` ${inputOperator}`;
+        return;
+      }
+
       if (state.operator && !state.waitingForOperand) {
+        // Perform the calculation before updating the operator
         const result = performCalculation(state);
         state.displayValue = String(result);
         state.previousValue = result;
         state.expression = `${result} ${inputOperator}`;
+      } else if (state.operator && inputOperator !== '-') {
+        // Replace the operator with the new one
+        state.expression = state.expression.slice(0, -1) + inputOperator;
       } else {
-        if (state.expression.endsWith(' ')) {
-          state.expression = state.expression.slice(0, -1);
-        }
-        state.expression += ` ${inputOperator} `;
         state.previousValue = state.displayValue;
-        state.operator = inputOperator;
-        state.waitingForOperand = true;
+        state.expression = `${state.expression} ${inputOperator}`;
       }
+
+      state.operator = inputOperator;
+      state.waitingForOperand = true;
     },
 
     calculateResult: (state) => {
