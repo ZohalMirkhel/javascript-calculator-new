@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import './index.css';
@@ -26,8 +26,15 @@ const calculatorSlice = createSlice({
       }
     },
     inputOperator: (state, action) => {
-      if (state.displayValue === '' && action.payload === '-') {
-        state.displayValue = action.payload;
+      const operator = action.payload;
+
+      if (state.displayValue === '' && operator === '-') {
+        state.displayValue = operator;
+        return;
+      }
+
+      if (state.waitingForOperand) {
+        state.operation = operator;
         return;
       }
 
@@ -39,7 +46,7 @@ const calculatorSlice = createSlice({
         state.currentOperand = currentValue;
       }
 
-      state.operation = action.payload;
+      state.operation = operator;
       state.displayValue = '';
       state.waitingForOperand = true;
     },
@@ -83,7 +90,6 @@ const store = configureStore({
     calculator: calculatorSlice.reducer,
   },
 });
-
 
 function Calculator() {
   const displayValue = useSelector((state) => state.calculator.displayValue);
@@ -129,7 +135,6 @@ function Calculator() {
     </div>
   );
 }
-
 
 function App() {
   return (
