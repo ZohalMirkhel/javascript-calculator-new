@@ -1,15 +1,8 @@
 import React from 'react';
-import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { Provider, useSelector, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
+import Calculator from './components/Calculator';
+import store from './redux/store';
 import './index.css';
-
-const initialState = {
-  displayValue: '0',
-  currentOperand: null,
-  operation: null,
-  waitingForOperand: false,
-};
-
 
 
 function App() {

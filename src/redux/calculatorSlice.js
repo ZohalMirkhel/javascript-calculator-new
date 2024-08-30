@@ -24,6 +24,20 @@ const calculatorSlice = createSlice({
     },
     inputOperator: (state, action) => {
       const operator = action.payload;
+
+      if (state.displayValue === '' && operator === '-') {
+        state.displayValue = operator;
+        state.waitingForOperand = false;
+        return;
+      }
+
+      if (state.waitingForOperand) {
+        if (operator !== '-' && state.operation !== null) {
+          state.operation = operator;
+          return;
+        }
+      }
+
       const currentValue = parseFloat(state.displayValue);
 
       if (state.currentOperand !== null && state.operation) {
