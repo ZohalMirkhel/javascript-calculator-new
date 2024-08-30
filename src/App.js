@@ -30,12 +30,15 @@ const calculatorSlice = createSlice({
 
       if (state.displayValue === '' && operator === '-') {
         state.displayValue = operator;
+        state.waitingForOperand = false;
         return;
       }
 
       if (state.waitingForOperand) {
-        state.operation = operator;
-        return;
+        if (operator !== '-' && state.operation !== null) {
+          state.operation = operator;
+          return;
+        }
       }
 
       const currentValue = parseFloat(state.displayValue);
