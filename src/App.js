@@ -84,10 +84,10 @@ function Calculator() {
     <div className="w-80 max-w-sm mx-auto bg-gray-800 shadow-lg rounded-lg overflow-hidden">
       <div className="p-4 bg-gray-900 text-white text-right text-4xl font-mono">{displayValue}</div>
       <div className="grid grid-cols-4 gap-1">
-        <button onClick={handleClear} className="bg-purple-600 text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-700">AC</button>
+      <button onClick={handleClear} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800">AC</button>
         <button onClick={() => handleOperator('(')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887]">(</button>
         <button onClick={() => handleOperator(')')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887]">)</button>
-        <button onClick={() => handleOperator('%')} className="bg-gray-600 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-700">%</button>
+        <button onClick={() => handleOperator('%')} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800">%</button>
 
         <button onClick={() => handleDigit('7')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600">7</button>
         <button onClick={() => handleDigit('8')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600">8</button>
@@ -105,7 +105,7 @@ function Calculator() {
         <button onClick={() => handleOperator('-')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887]">-</button>
 
         <button onClick={() => handleDigit('0')} className="col-span-2 bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600">0</button>
-        <button onClick={() => handleDigit('.')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887]">.</button>
+        <button onClick={() => handleDigit('.')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600">.</button>
         <button onClick={() => handleOperator('+')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887]">+</button>
 
         <button onClick={handleEquals} className="col-span-4 bg-blue-600 text-white text-2xl font-bold py-4 rounded-lg hover:bg-blue-700">=</button>
