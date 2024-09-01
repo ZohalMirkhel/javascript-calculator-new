@@ -6,7 +6,10 @@ const initialState = {
   previousValue: null,
   operator: null,
   waitingForOperand: false,
+  lastResult: null,
 };
+
+const isOperator = (char) => ['+', '-', '*', '/'].includes(char);
 
 const calculatorSlice = createSlice({
   name: 'calculator',
@@ -26,37 +29,38 @@ const calculatorSlice = createSlice({
           : state.displayValue + digit;
       }
 
-      // Update the expression
-      if (state.operator) {
-        state.expression = `${state.previousValue} ${state.operator} ${state.displayValue}`;
-      } else {
-        state.expression = state.displayValue;
-      }
+      state.expression += digit;
     },
 
     inputOperator: (state, action) => {
       const inputOperator = action.payload;
-
-      // Handle the case where the operator is '-' and waiting for operand
       if (inputOperator === '-' && state.waitingForOperand) {
-        state.displayValue = inputOperator; // Display the negative sign
-        state.waitingForOperand = false;
-        state.expression += ` ${inputOperator}`;
+        if (isOperator(state.expression.slice(-1))) {
+          state.displayValue = '-';
+          state.expression += '-';
+          state.waitingForOperand = false;
+          return;
+        }
+      }
+
+      if (state.waitingForOperand && isOperator(inputOperator)) {
+        if (isOperator(state.expression.slice(-1))) {
+          state.expression = state.expression.slice(0, -1) + inputOperator;
+        } else {
+          state.expression += ` ${inputOperator} `;
+        }
+        state.operator = inputOperator;
         return;
       }
 
       if (state.operator && !state.waitingForOperand) {
-        // Perform the calculation before updating the operator
         const result = performCalculation(state);
         state.displayValue = String(result);
         state.previousValue = result;
-        state.expression = `${result} ${inputOperator}`;
-      } else if (state.operator && inputOperator !== '-') {
-        // Replace the operator with the new one
-        state.expression = state.expression.slice(0, -1) + inputOperator;
+        state.expression = `${result} ${inputOperator} `;
       } else {
         state.previousValue = state.displayValue;
-        state.expression = `${state.expression} ${inputOperator}`;
+        state.expression += ` ${inputOperator} `;
       }
 
       state.operator = inputOperator;
@@ -64,12 +68,15 @@ const calculatorSlice = createSlice({
     },
 
     calculateResult: (state) => {
-      const result = performCalculation(state);
-      state.displayValue = String(result);
-      state.previousValue = null;
-      state.operator = null;
-      state.waitingForOperand = false;
-      state.expression = `${state.expression} = ${result}`;
+      if (state.operator && state.previousValue !== null) {
+        const result = performCalculation(state);
+        state.displayValue = String(result);
+        state.previousValue = result;
+        state.expression = `${state.expression} = ${result}`;
+        state.lastResult = result;
+        state.operator = null;
+        state.waitingForOperand = false;
+      }
     },
 
     clear: (state) => {
@@ -78,8 +85,19 @@ const calculatorSlice = createSlice({
       state.previousValue = null;
       state.operator = null;
       state.waitingForOperand = false;
+      state.lastResult = null;
     },
-  }
+
+    handleEqualAndOperator: (state, action) => {
+      if (state.lastResult !== null) {
+        state.displayValue = state.lastResult;
+        state.previousValue = state.lastResult;
+        state.operator = action.payload;
+        state.expression = `${state.lastResult} ${action.payload} `;
+        state.waitingForOperand = true;
+      }
+    },
+  },
 });
 
 const performCalculation = (state) => {
@@ -88,19 +106,32 @@ const performCalculation = (state) => {
 
   if (isNaN(prev) || isNaN(current)) return state.displayValue;
 
+  let result;
   switch (state.operator) {
     case '+':
-      return prev + current;
+      result = prev + current;
+      break;
     case '-':
-      return prev - current;
+      result = prev - current;
+      break;
     case '*':
-      return prev * current;
+      result = prev * current;
+      break;
     case '/':
-      return current !== 0 ? prev / current : 'Error';
+      result = current !== 0 ? prev / current : 'Error';
+      break;
     default:
-      return current;
+      result = current;
   }
+
+  return parseFloat(result.toFixed(4));
 };
 
-export const { inputDigit, inputOperator, calculateResult, clear } = calculatorSlice.actions;
+export const {
+  inputDigit,
+  inputOperator,
+  calculateResult,
+  clear,
+  handleEqualAndOperator,
+} = calculatorSlice.actions;
 export default calculatorSlice.reducer;
