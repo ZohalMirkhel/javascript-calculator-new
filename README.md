@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+## JavaScript Calculator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a React-based JavaScript Calculator that performs basic arithmetic operations, including handling sequences of operations with proper order of precedence. The calculator mimics the functionality of a standard calculator, including edge cases like handling negative numbers and multiple consecutive operators.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Basic arithmetic operations: addition, subtraction, multiplication, and division.
+- Handles multiple consecutive operators, following the rule that the last operator is performed unless the second operator is a negative sign.
+- Correctly handles operations with negative numbers (e.g., `10 * -5` results in `-50`).
+- Displays input and results on a responsive calculator interface styled to resemble a modern calculator.
+- Provides a clear button to reset the calculator to its initial state.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React:** Frontend library for building the user interface.
+- **Redux:** For managing the state of the calculator's operations and display.
+- **Tailwind CSS:** For styling the components and creating a responsive design.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Live Demo
 
-### `npm test`
+![alt text](calculator-screenshot.png)
+You can view a live demo of the project [here](https://your-calculator-demo-link.com)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+To run this project locally, follow these steps:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository**:
+   ```bash
+   git clone git@github.com:ZohalMirkhel/javascript-calculator.git
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Navigate to the project directory**:
+   ```bash
+   cd javascript-calculator
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Install the Required Dependencies**:
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+4. **Run the Project**:
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Enter numbers and perform operations using the on-screen buttons.
+2. Use the `=` button to calculate the result of the entered expression.
+3. The calculator handles operations involving multiple operators, ensuring the last operator is applied correctly.
+4. Use the `C` button to clear the current input and reset the calculator.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Adjusting Styles
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You can adjust the styling of the calculator by modifying the Tailwind CSS classes or adding custom styles in the `App.js` file.
 
-## Learn More
+## Contributing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If you'd like to contribute to this project, please fork the repository, make your changes, and submit a pull request. Contributions to improve the calculator's functionality, fix bugs, or enhance its design are welcome!
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For any questions, feedback, or support, please contact me at:
+- Email: [zohalmirkhel@gmail.com](mailto:zohalmirkhel@gmail.com)
+- GitHub: [Zohal Mirkhel](https://github.com/ZohalMirkhel)
+- LinkedIn: [Zohal Mirkhel](https://www.linkedin.com/in/zohal-mirkhel-840a7530a/)
