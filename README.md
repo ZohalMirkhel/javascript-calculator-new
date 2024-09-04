@@ -18,7 +18,7 @@ This project is a React-based JavaScript Calculator that performs basic arithmet
 
 ## Live Demo
 
-![alt text](calculator-screenshot.png)
+![alt text](image.png)
 You can view a live demo of the project [here](https://your-calculator-demo-link.com)
 
 ## Installation
