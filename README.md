@@ -19,7 +19,7 @@ This project is a React-based JavaScript Calculator that performs basic arithmet
 ## Live Demo
 
 ![alt text](image.png)
-You can view a live demo of the project [here](https://your-calculator-demo-link.com)
+You can view a live demo of the project [here](https://calculator--zohal-calculator-app.netlify.app/)
 
 ## Installation
 
