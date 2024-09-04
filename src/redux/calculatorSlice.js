@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { evaluate } from 'mathjs';
 
 const initialState = {
   displayValue: '0',
@@ -7,6 +8,7 @@ const initialState = {
   operator: null,
   waitingForOperand: false,
   lastResult: null,
+  lastWasEquals: false,
 };
 
 const isOperator = (char) => ['+', '-', '*', '/'].includes(char);
@@ -30,52 +32,58 @@ const calculatorSlice = createSlice({
       }
 
       state.expression += digit;
+      state.lastWasEquals = false;
     },
 
     inputOperator: (state, action) => {
-      const inputOperator = action.payload;
-      const lastChar = state.expression.slice(-1);
+      const nextOperator = action.payload;
 
-      if (state.waitingForOperand) {
-        // Handle case where the last character was an operator
-        if (isOperator(lastChar) && inputOperator !== '-') {
-          state.expression = state.expression.slice(0, -1) + inputOperator;
-          state.displayValue = '';
-          state.operator = inputOperator;
-          return;
-        } else if (inputOperator === '-') {
-          // Handle negative sign as a separate case
-          state.displayValue = '-';
-          state.expression += inputOperator;
-          state.waitingForOperand = false;
-          return;
-        }
-      }
-
-      // Perform calculation if there is an existing operator
-      if (state.operator && !state.waitingForOperand) {
-        const result = performCalculation(state);
-        state.displayValue = String(result);
-        state.previousValue = result;
-        state.expression = `${result} ${inputOperator} `;
+      if (state.lastWasEquals) {
+        state.expression = `${state.lastResult} ${nextOperator} `;
+        state.displayValue = `${state.lastResult} ${nextOperator} `;
+        state.lastResult = null;
       } else {
-        state.previousValue = state.displayValue;
-        state.expression += ` ${inputOperator} `;
+        if (state.waitingForOperand) {
+          if (nextOperator === '-') {
+            state.displayValue = state.displayValue.slice(0, -1) + nextOperator;
+            state.expression = state.expression.slice(0, -1) + nextOperator;
+          } else {
+            state.expression = state.expression.slice(0, -2) + ` ${nextOperator} `;
+            state.displayValue = state.displayValue.slice(0, -2) + ` ${nextOperator} `;
+          }
+        } else {
+          state.expression += ` ${nextOperator} `;
+          state.displayValue += ` ${nextOperator} `;
+        }
+
+        state.operator = nextOperator;
+        state.waitingForOperand = true;
       }
 
-      state.operator = inputOperator;
-      state.waitingForOperand = true;
+      state.lastWasEquals = false;
     },
 
     calculateResult: (state) => {
-      if (state.operator && state.previousValue !== null) {
-        const result = performCalculation(state);
-        state.displayValue = String(result);
-        state.previousValue = result;
-        state.expression = `${state.expression} = ${result}`;
-        state.lastResult = result;
-        state.operator = null;
+      try {
+        const trimmedExpression = state.expression.trim();
+        if (isOperator(trimmedExpression.charAt(trimmedExpression.length - 1))) {
+          state.displayValue = 'Error';
+          state.expression = '';
+          return;
+        }
+
+        const result = evaluate(trimmedExpression);
+        state.displayValue = parseFloat(result).toFixed(10).replace(/\.?0+$/, '');
+        state.expression = state.displayValue;
+        state.lastResult = parseFloat(state.displayValue);
+        state.waitingForOperand = true;
+        state.lastWasEquals = true;
+      } catch (error) {
+        state.displayValue = 'Error';
+        state.expression = '';
+        state.lastResult = null;
         state.waitingForOperand = false;
+        state.lastWasEquals = false;
       }
     },
 
@@ -86,49 +94,28 @@ const calculatorSlice = createSlice({
       state.operator = null;
       state.waitingForOperand = false;
       state.lastResult = null;
+      state.lastWasEquals = false;
     },
 
     handleEqualAndOperator: (state, action) => {
+      const inputOperator = action.payload;
+    
       if (state.lastResult !== null) {
-        state.displayValue = state.lastResult;
-        state.previousValue = state.lastResult;
-        state.operator = action.payload;
-        state.expression = `${state.lastResult} ${action.payload} `;
+        state.expression = `${state.lastResult} ${inputOperator} `;
+        state.displayValue = `${state.lastResult} ${inputOperator} `;
         state.waitingForOperand = true;
+        state.operator = inputOperator;
+        state.lastResult = null;
+        state.lastWasEquals = false;
+      } else {
+        state.expression += ` ${inputOperator} `;
+        state.displayValue += ` ${inputOperator} `;
+        state.waitingForOperand = true;
+        state.operator = inputOperator;
       }
     },
   },
 });
-
-const performCalculation = (state) => {
-  const prev = parseFloat(state.previousValue);
-  const current = parseFloat(state.displayValue);
-
-  if (isNaN(prev) || isNaN(current)) return state.displayValue;
-
-  let result;
-  switch (state.operator) {
-    case '+':
-      result = prev + current;
-      break;
-    case '-':
-      result = prev - current;
-      break;
-    case '*':
-      result = prev * current;
-      break;
-    case '/':
-      result = current !== 0 ? prev / current : 'Error';
-      break;
-    case '%':
-      result = prev % current;
-      break;
-    default:
-      result = current;
-  }
-
-  return parseFloat(result.toFixed(4));
-};
 
 export const {
   inputDigit,
@@ -137,4 +124,5 @@ export const {
   clear,
   handleEqualAndOperator,
 } = calculatorSlice.actions;
+
 export default calculatorSlice.reducer;
