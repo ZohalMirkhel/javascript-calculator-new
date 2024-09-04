@@ -34,25 +34,25 @@ const calculatorSlice = createSlice({
 
     inputOperator: (state, action) => {
       const inputOperator = action.payload;
-      if (inputOperator === '-' && state.waitingForOperand) {
-        if (isOperator(state.expression.slice(-1))) {
+      const lastChar = state.expression.slice(-1);
+
+      if (state.waitingForOperand) {
+        // Handle case where the last character was an operator
+        if (isOperator(lastChar) && inputOperator !== '-') {
+          state.expression = state.expression.slice(0, -1) + inputOperator;
+          state.displayValue = '';
+          state.operator = inputOperator;
+          return;
+        } else if (inputOperator === '-') {
+          // Handle negative sign as a separate case
           state.displayValue = '-';
-          state.expression += '-';
+          state.expression += inputOperator;
           state.waitingForOperand = false;
           return;
         }
       }
 
-      if (state.waitingForOperand && isOperator(inputOperator)) {
-        if (isOperator(state.expression.slice(-1))) {
-          state.expression = state.expression.slice(0, -1) + inputOperator;
-        } else {
-          state.expression += ` ${inputOperator} `;
-        }
-        state.operator = inputOperator;
-        return;
-      }
-
+      // Perform calculation if there is an existing operator
       if (state.operator && !state.waitingForOperand) {
         const result = performCalculation(state);
         state.displayValue = String(result);
@@ -119,6 +119,9 @@ const performCalculation = (state) => {
       break;
     case '/':
       result = current !== 0 ? prev / current : 'Error';
+      break;
+    case '%':
+      result = prev % current;
       break;
     default:
       result = current;

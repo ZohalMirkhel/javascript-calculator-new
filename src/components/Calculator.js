@@ -21,11 +21,11 @@ function Calculator() {
         {expression}
       </div>
       <div className="grid grid-cols-4 gap-1">
-        <button id="clear" onClick={handleClear} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800 shadow-md">AC</button>
-        <button id="parentheses-open" onClick={() => handleOperator('(')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887] shadow-md">(</button>
-        <button id="parentheses-close" onClick={() => handleOperator(')')} className="bg-[#4059A1] text-white text-2xl font-bold py-4 rounded-lg hover:bg-[#314887] shadow-md">)</button>
-        <button id="percentage" onClick={() => handleOperator('%')} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800 shadow-md">%</button>
-
+        <div className="col-span-4 grid grid-cols-2 gap-1">
+          <button id="clear" onClick={handleClear} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800 shadow-md">AC</button>
+          <button id="percentage" onClick={() => handleOperator('%')} className="bg-[#7544A8] text-white text-2xl font-bold py-4 rounded-lg hover:bg-purple-800 shadow-md">%</button>
+        </div>
+        
         <button id="seven" onClick={() => handleDigit('7')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600 shadow-md">7</button>
         <button id="eight" onClick={() => handleDigit('8')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600 shadow-md">8</button>
         <button id="nine" onClick={() => handleDigit('9')} className="bg-gray-700 text-white text-2xl font-bold py-4 rounded-lg hover:bg-gray-600 shadow-md">9</button>
